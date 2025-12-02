@@ -1,45 +1,87 @@
+@use "../../../assets/scss/setup/variables" as *;
+
 .add-todo-form {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 24px;
-  padding: 16px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: $spacing-md;
+  padding: $spacing-xl;
+  background: $bg-primary;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-lg;
+  border: 1px solid $gray-200;
+  transition: box-shadow $transition-base, transform $transition-base;
+
+  &:hover {
+    box-shadow: $shadow-xl;
+  }
+
+  &:focus-within {
+    box-shadow: $shadow-xl, 0 0 0 3px $primary-lighter;
+    transform: translateY(-2px);
+  }
+
+  @media (min-width: $breakpoint-md) {
+    padding: $spacing-xl $spacing-2xl;
+  }
 }
 
 .todo-input {
-  flex: 1;
-  padding: 12px 16px;
-  border: 2px solid #e0e0e0;
-  border-radius: 6px;
-  font-size: 16px;
-  transition: border-color 0.3s;
+  grid-column: 1;
+  padding: $spacing-md $spacing-lg;
+  border: 2px solid $gray-300;
+  border-radius: $radius-lg;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  color: $text-primary;
+  background: $bg-primary;
+  transition: border-color $transition-base, box-shadow $transition-base;
+
+  &::placeholder {
+    color: $text-tertiary;
+  }
 
   &:focus {
     outline: none;
-    border-color: #4a90e2;
+    border-color: $primary;
+    box-shadow: 0 0 0 3px $primary-lighter;
+  }
+
+  &:hover:not(:focus) {
+    border-color: $gray-400;
   }
 }
 
 .add-btn {
-  padding: 12px 24px;
-  background: #4a90e2;
-  color: white;
+  grid-column: 2;
+  padding: $spacing-md $spacing-xl;
+  background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+  color: $text-inverse;
   border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  font-weight: 600;
+  border-radius: $radius-lg;
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all $transition-base;
+  box-shadow: $shadow-md;
+  white-space: nowrap;
 
   &:hover:not(:disabled) {
-    background: #357abd;
+    background: linear-gradient(135deg, $primary-dark 0%, $primary 100%);
+    box-shadow: $shadow-lg;
+    transform: translateY(-2px);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: $shadow-sm;
   }
 
   &:disabled {
-    background: #ccc;
+    background: $gray-300;
+    color: $gray-500;
     cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
   }
 }
 
