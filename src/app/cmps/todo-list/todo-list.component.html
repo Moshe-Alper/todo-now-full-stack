@@ -1,8 +1,9 @@
 <add-todo/>
 <section class="todo-list">
-    <ul>
-        <li>
-            <todo-preview/>
+    <ul *ngIf="todos.length > 0">
+        <li *ngFor="let todo of todos">
+            <todo-preview [todo]="todo"/>
         </li>
     </ul>
+    <p *ngIf="todos.length === 0" class="empty-message">No todos yet. Add one above!</p>
 </section>
