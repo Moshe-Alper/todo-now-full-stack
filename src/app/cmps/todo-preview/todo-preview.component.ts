@@ -54,7 +54,7 @@ export class TodoPreviewComponent implements OnInit {
 
   deleteTodo(): void {
     if (confirm('Are you sure you want to delete this todo?')) {
-      this.todoService.deleteTodo(this.todo.id)
+      this.todoService.removeTodo(this.todo.id)
     }
   }
 }
