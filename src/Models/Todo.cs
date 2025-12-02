@@ -5,13 +5,13 @@ namespace TodoApi.Models
     public class Todo
     {
         [JsonProperty("id")]
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
         
         [JsonProperty("userId")]
-        public string UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
         
         [JsonProperty("title")]
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
         
         [JsonProperty("isCompleted")]
         public bool IsCompleted { get; set; }
