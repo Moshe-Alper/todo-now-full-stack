@@ -4,5 +4,5 @@
             <todo-preview [todo]="todo"/>
         </li>
     </ul>
-    <p *ngIf="todos().length === 0" class="empty-message">No todos yet. Add one above!</p>
+    <p *ngIf="todos().length === 0" class="empty-message">{{ emptyMessage() }}</p>
 </section>

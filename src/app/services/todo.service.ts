@@ -18,6 +18,7 @@ export class TodoService {
   
   // Signals
   filterBy_ = toSignal(this._filterBy$, { requireSync: true })
+  allTodos_ = toSignal(this.todos$, { initialValue: [] })
   
   // Filtered todos observable
   filteredTodos$ = combineLatest([
