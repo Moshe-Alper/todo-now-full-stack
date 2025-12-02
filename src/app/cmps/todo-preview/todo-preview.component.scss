@@ -1,3 +1,4 @@
+@use "sass:color";
 @use "../../../assets/scss/setup/variables" as *;
 
 .todo-item {
@@ -139,11 +140,11 @@
 }
 
 .btn-save {
-  background: linear-gradient(135deg, $success 0%, darken($success, 5%) 100%);
+  background: linear-gradient(135deg, $success 0%, color.scale($success, $lightness: -5%) 100%);
   color: $text-inverse;
 
   &:hover:not(:disabled) {
-    background: linear-gradient(135deg, darken($success, 5%) 0%, $success 100%);
+    background: linear-gradient(135deg, color.scale($success, $lightness: -5%) 0%, $success 100%);
   }
 
   &:disabled {
