@@ -10,6 +10,7 @@ import { TodoListComponent } from './cmps/todo-list/todo-list.component'
 import { TodoPreviewComponent } from './cmps/todo-preview/todo-preview.component'
 import { AddTodoComponent } from './cmps/add-todo/add-todo.component'
 import { TodoFilterComponent } from './cmps/todo-filter/todo-filter.component'
+import { TodoIndexComponent } from './cmps/todo-index/todo-index.component'
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { TodoFilterComponent } from './cmps/todo-filter/todo-filter.component'
     AppHeaderComponent,
     TodoListComponent,
     TodoPreviewComponent,
-    AddTodoComponent
+    AddTodoComponent,
+    TodoIndexComponent
   ],
   imports: [
     BrowserModule,
