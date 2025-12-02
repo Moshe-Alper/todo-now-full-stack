@@ -5,6 +5,6 @@ export interface Todo {
     createdAt: number
 }
 
-export interface filterBy {
-    isCompleted: boolean
+export interface FilterBy {
+    isCompleted?: boolean | null
 }

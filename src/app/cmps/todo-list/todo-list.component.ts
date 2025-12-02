@@ -1,5 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core'
-import { Subscription } from 'rxjs'
+import { Component, inject, Signal } from '@angular/core'
 import { TodoService } from '../../services/todo.service'
 import { Todo } from '../../models/todo.model'
 
@@ -9,20 +8,7 @@ import { Todo } from '../../models/todo.model'
   templateUrl: './todo-list.component.html',
   styleUrl: './todo-list.component.scss'
 })
-export class TodoListComponent implements OnInit, OnDestroy {
-  todos: Todo[] = []
-  private subscription?: Subscription
-
-  constructor(private todoService: TodoService) {}
-
-  ngOnInit(): void {
-    this.todos = this.todoService.getTodos()
-    this.subscription = this.todoService.todos$.subscribe(todos => {
-      this.todos = todos
-    })
-  }
-
-  ngOnDestroy(): void {
-    this.subscription?.unsubscribe()
-  }
+export class TodoListComponent {
+  private todoService = inject(TodoService)
+  todos: Signal<Todo[]> = this.todoService.filteredTodos_
 }

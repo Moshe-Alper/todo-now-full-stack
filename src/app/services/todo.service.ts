@@ -1,7 +1,9 @@
-import { Injectable } from '@angular/core'
-import { BehaviorSubject, Observable } from 'rxjs'
+import { Injectable, signal } from '@angular/core'
+import { BehaviorSubject, Observable, combineLatest } from 'rxjs'
+import { map, share } from 'rxjs/operators'
+import { toSignal } from '@angular/core/rxjs-interop'
 import { dummyTodos } from '../data/dummy-todos'
-import { Todo } from '../models/todo.model'
+import { Todo, FilterBy } from '../models/todo.model'
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +12,28 @@ export class TodoService {
   private todos = dummyTodos
   private todosSubject = new BehaviorSubject<Todo[]>([...this.todos])
   public todos$: Observable<Todo[]> = this.todosSubject.asObservable()
+  
+  // Filter sources
+  private _filterBy$ = new BehaviorSubject<FilterBy>({ isCompleted: null })
+  
+  // Signals
+  filterBy_ = toSignal(this._filterBy$, { requireSync: true })
+  
+  // Filtered todos observable
+  filteredTodos$ = combineLatest([
+    this.todos$,
+    this._filterBy$
+  ]).pipe(
+    map(([todos, filterBy]) => {
+      if (filterBy.isCompleted === null || filterBy.isCompleted === undefined) {
+        return todos
+      }
+      return todos.filter(todo => todo.isCompleted === filterBy.isCompleted)
+    }),
+    share()
+  )
+  
+  filteredTodos_ = toSignal(this.filteredTodos$, { initialValue: [] })
   
   constructor() {
     const todos = localStorage.getItem('todos')
@@ -55,6 +79,10 @@ export class TodoService {
       todo.isCompleted = !todo.isCompleted
       this.saveTodos()
     }
+  }
+
+  setFilterBy(filterBy: FilterBy): void {
+    this._filterBy$.next({ ...filterBy })
   }
 
   private saveTodos(): void {

@@ -9,6 +9,7 @@ import { AppHeaderComponent } from './cmps/app-header/app-header.component'
 import { TodoListComponent } from './cmps/todo-list/todo-list.component'
 import { TodoPreviewComponent } from './cmps/todo-preview/todo-preview.component'
 import { AddTodoComponent } from './cmps/add-todo/add-todo.component'
+import { TodoFilterComponent } from './cmps/todo-filter/todo-filter.component'
 
 @NgModule({
   declarations: [
@@ -23,8 +24,9 @@ import { AddTodoComponent } from './cmps/add-todo/add-todo.component'
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    AppRoutingModule
-  ],
+    AppRoutingModule,
+    TodoFilterComponent
+],
   providers: [],
   bootstrap: [AppComponent]
 })
