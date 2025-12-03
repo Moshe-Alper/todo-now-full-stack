@@ -4288,11 +4288,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/moshikalper/Dev/todo-fullStack/todo-now-backend/src/TodoApi.csproj",
+      "projectUniqueName": "/Users/moshikalper/Playground/todo-now-fullstack/backend/src/TodoApi.csproj",
       "projectName": "TodoApi",
-      "projectPath": "/Users/moshikalper/Dev/todo-fullStack/todo-now-backend/src/TodoApi.csproj",
+      "projectPath": "/Users/moshikalper/Playground/todo-now-fullstack/backend/src/TodoApi.csproj",
       "packagesPath": "/Users/moshikalper/.nuget/packages/",
-      "outputPath": "/Users/moshikalper/Dev/todo-fullStack/todo-now-backend/src/obj/",
+      "outputPath": "/Users/moshikalper/Playground/todo-now-fullstack/backend/src/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/moshikalper/.nuget/NuGet/NuGet.Config"

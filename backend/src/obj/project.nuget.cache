@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "GsgmJyz5c0s=",
+  "dgSpecHash": "y21ucX7gmxA=",
   "success": true,
-  "projectFilePath": "/Users/moshikalper/Dev/todo-fullStack/todo-now-backend/src/TodoApi.csproj",
+  "projectFilePath": "/Users/moshikalper/Playground/todo-now-fullstack/backend/src/TodoApi.csproj",
   "expectedPackageFiles": [
     "/Users/moshikalper/.nuget/packages/azure.core/1.44.1/azure.core.1.44.1.nupkg.sha512",
     "/Users/moshikalper/.nuget/packages/microsoft.aspnetcore.jsonpatch/6.0.0/microsoft.aspnetcore.jsonpatch.6.0.0.nupkg.sha512",
