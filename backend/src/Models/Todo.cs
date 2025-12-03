@@ -18,5 +18,8 @@ namespace TodoApi.Models
         
         [JsonProperty("createdAt")]
         public long CreatedAt { get; set; }
+        
+        [JsonProperty("updatedAt")]
+        public long? UpdatedAt { get; set; }
     }
 }

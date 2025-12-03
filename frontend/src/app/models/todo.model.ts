@@ -3,6 +3,7 @@ export interface Todo {
     title: string
     isCompleted: boolean
     createdAt: number
+    updatedAt?: number
 }
 
 export interface FilterBy {

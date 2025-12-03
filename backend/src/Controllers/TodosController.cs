@@ -140,6 +140,10 @@ namespace TodoApi.Controllers
                 return NotFound(new { message = $"Todo with id '{id}' not found" });
             }
 
+            // Preserve createdAt from existing todo and set updatedAt
+            todo.CreatedAt = existingTodo.CreatedAt;
+            todo.UpdatedAt = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
             await _todoService.UpdateTodoAsync(id, todo);
             return NoContent();
         }
