@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
+import { HttpClientModule } from '@angular/common/http'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { CommonModule } from '@angular/common'
 
@@ -24,11 +25,12 @@ import { TodoIndexComponent } from './cmps/todo-index/todo-index.component'
   imports: [
     BrowserModule,
     CommonModule,
+    HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
     TodoFilterComponent
-],
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

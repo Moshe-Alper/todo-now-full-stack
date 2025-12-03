@@ -1,16 +1,17 @@
 import { Injectable, signal } from '@angular/core'
+import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs'
 import { map, share } from 'rxjs/operators'
 import { toSignal } from '@angular/core/rxjs-interop'
-import { dummyTodos } from '../data/dummy-todos'
 import { Todo, FilterBy } from '../models/todo.model'
+import { environment } from '../../environments/environment'
 
 @Injectable({
   providedIn: 'root'
 })
 export class TodoService {
-  private todos = dummyTodos
-  private todosSubject = new BehaviorSubject<Todo[]>([...this.todos])
+  private apiUrl = `${environment.apiUrl}/todos`
+  private todosSubject = new BehaviorSubject<Todo[]>([])
   public todos$: Observable<Todo[]> = this.todosSubject.asObservable()
   
   // Filter sources
@@ -36,63 +37,91 @@ export class TodoService {
   
   filteredTodos_ = toSignal(this.filteredTodos$, { initialValue: [] })
   
-  constructor() {
-    const todos = localStorage.getItem('todos')
-    
-    if (todos) {
-      this.todos = JSON.parse(todos)
-      this.todosSubject.next([...this.todos])
-    }
+  private httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      'X-User-Id': 'demo'
+    })
+  }
+  
+  constructor(private http: HttpClient) {
+    this.loadTodos()
+  }
+
+  private loadTodos(): void {
+    this.http.get<Todo[]>(this.apiUrl, this.httpOptions).subscribe({
+      next: (todos) => {
+        this.todosSubject.next(todos)
+      },
+      error: (error) => {
+        console.error('Error loading todos:', error)
+        this.todosSubject.next([])
+      }
+    })
   }
 
   getTodos(): Todo[] {
-    return [...this.todos]
+    return [...this.todosSubject.value]
   }
 
-  addTodo(title: string): Todo {
+  addTodo(title: string): void {
     const newTodo: Todo = {
-      id: this.generateId(),
+      id: '',
       title: title.trim(),
       isCompleted: false,
       createdAt: Date.now()
     }
-    this.todos.unshift(newTodo)
-    this.saveTodos()
-    return newTodo
+    
+    this.http.post<Todo>(this.apiUrl, newTodo, this.httpOptions).subscribe({
+      next: (createdTodo) => {
+        const currentTodos = this.todosSubject.value
+        this.todosSubject.next([createdTodo, ...currentTodos])
+      },
+      error: (error) => {
+        console.error('Error adding todo:', error)
+      }
+    })
   }
 
   updateTodo(updatedTodo: Todo): void {
-    const index = this.todos.findIndex(todo => todo.id === updatedTodo.id)
-    if (index !== -1) {
-      this.todos[index] = { ...updatedTodo }
-      this.saveTodos()
-    }
+    this.http.put<Todo>(`${this.apiUrl}/${updatedTodo.id}`, updatedTodo, this.httpOptions).subscribe({
+      next: () => {
+        const currentTodos = this.todosSubject.value
+        const index = currentTodos.findIndex(todo => todo.id === updatedTodo.id)
+        if (index !== -1) {
+          const updatedTodos = [...currentTodos]
+          updatedTodos[index] = { ...updatedTodo }
+          this.todosSubject.next(updatedTodos)
+        }
+      },
+      error: (error) => {
+        console.error('Error updating todo:', error)
+      }
+    })
   }
 
   removeTodo(id: string): void {
-    this.todos = this.todos.filter(todo => todo.id !== id)
-    this.saveTodos()
+    this.http.delete(`${this.apiUrl}/${id}`, this.httpOptions).subscribe({
+      next: () => {
+        const currentTodos = this.todosSubject.value.filter(todo => todo.id !== id)
+        this.todosSubject.next(currentTodos)
+      },
+      error: (error) => {
+        console.error('Error removing todo:', error)
+      }
+    })
   }
 
   toggleComplete(id: string): void {
-    const todo = this.todos.find(t => t.id === id)
+    const todo = this.todosSubject.value.find(t => t.id === id)
     if (todo) {
-      todo.isCompleted = !todo.isCompleted
-      this.saveTodos()
+      const updatedTodo = { ...todo, isCompleted: !todo.isCompleted }
+      this.updateTodo(updatedTodo)
     }
   }
 
   setFilterBy(filterBy: FilterBy): void {
     this._filterBy$.next({ ...filterBy })
-  }
-
-  private saveTodos(): void {
-    localStorage.setItem('todos', JSON.stringify(this.todos))
-    this.todosSubject.next([...this.todos])
-  }
-
-  private generateId(): string {
-    return 't' + Date.now().toString()
   }
 
 }
