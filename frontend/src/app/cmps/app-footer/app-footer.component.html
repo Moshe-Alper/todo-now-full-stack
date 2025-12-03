@@ -1,40 +1,49 @@
-<footer class="todo-footer">
-  <div class="footer-content">
-    <!-- Left: Items count -->
-    <div class="items-count">
-      <span class="count-number">{{ activeCount() }}</span>
-      <span class="count-text">{{ activeCount() === 1 ? 'item' : 'items' }} left</span>
-    </div>
+<footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 shadow-sm mt-8">
+  <div class="max-w-2xl mx-auto px-4 py-4">
+    <div class="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-4 items-center">
+      <!-- Left: Items count -->
+      <div class="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 justify-center md:justify-start">
+        <span class="font-medium text-gray-700 dark:text-gray-300">{{ activeCount() }}</span>
+        <span>{{ activeCount() === 1 ? 'item' : 'items' }} left</span>
+      </div>
 
-    <!-- Center: Filter buttons -->
-    <div class="filter-buttons">
-      <button 
-        class="filter-btn" 
-        [class.active]="isActive('all')"
-        (click)="setFilter('all')">
-        All
-      </button>
-      <button 
-        class="filter-btn" 
-        [class.active]="isActive('active')"
-        (click)="setFilter('active')">
-        Active
-      </button>
-      <button 
-        class="filter-btn" 
-        [class.active]="isActive('completed')"
-        (click)="setFilter('completed')">
-        Completed
-      </button>
-    </div>
+      <!-- Center: Filter buttons (pill style) -->
+      <div class="flex items-center gap-1 bg-gray-100 dark:bg-gray-700 p-1 rounded-lg justify-center">
+        <button 
+          class="px-4 py-1.5 text-sm font-medium rounded-md transition-all duration-200
+                 [&.active]:bg-white [&.active]:dark:bg-gray-600 [&.active]:text-primary [&.active]:shadow-sm
+                 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100" 
+          [class.active]="isActive('all')"
+          (click)="setFilter('all')">
+          All
+        </button>
+        <button 
+          class="px-4 py-1.5 text-sm font-medium rounded-md transition-all duration-200
+                 [&.active]:bg-white [&.active]:dark:bg-gray-600 [&.active]:text-primary [&.active]:shadow-sm
+                 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100" 
+          [class.active]="isActive('active')"
+          (click)="setFilter('active')">
+          Active
+        </button>
+        <button 
+          class="px-4 py-1.5 text-sm font-medium rounded-md transition-all duration-200
+                 [&.active]:bg-white [&.active]:dark:bg-gray-600 [&.active]:text-primary [&.active]:shadow-sm
+                 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100" 
+          [class.active]="isActive('completed')"
+          (click)="setFilter('completed')">
+          Completed
+        </button>
+      </div>
 
-    <!-- Right: Clear completed button -->
-    <div class="clear-completed" *ngIf="completedCount() > 0">
-      <button 
-        class="clear-btn" 
-        (click)="clearCompleted()">
-        Clear completed
-      </button>
+      <!-- Right: Clear completed button -->
+      <div class="flex justify-center md:justify-end" *ngIf="completedCount() > 0">
+        <button 
+          class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 
+                 hover:underline transition-all duration-200 font-medium" 
+          (click)="clearCompleted()">
+          Clear completed
+        </button>
+      </div>
     </div>
   </div>
 </footer>

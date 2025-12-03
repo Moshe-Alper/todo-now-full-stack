@@ -1,9 +1,1 @@
-@use "../assets/scss/setup/variables" as *;
-
-.app-container {
-  display: grid;
-  grid-template-rows: auto 1fr;
-  min-height: 100vh;
-  background: linear-gradient(135deg, $gray-50 0%, $bg-primary 100%);
-}
-
+// Minimal SCSS - using Tailwind for styling

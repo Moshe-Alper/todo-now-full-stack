@@ -1,8 +1,10 @@
-<section class="todo-list">
-    <ul *ngIf="todos().length > 0">
-        <li *ngFor="let todo of todos()">
-            <todo-preview [todo]="todo"/>
-        </li>
-    </ul>
-    <p *ngIf="todos().length === 0" class="empty-message">{{ emptyMessage() }}</p>
+<section class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+  <ul *ngIf="todos().length > 0" class="divide-y divide-gray-100 dark:divide-gray-700">
+    <li *ngFor="let todo of todos()" class="transition-all duration-200 hover:bg-gray-50/50 dark:hover:bg-gray-700/50">
+      <todo-preview [todo]="todo"/>
+    </li>
+  </ul>
+  <div *ngIf="todos().length === 0" class="p-12 text-center">
+    <p class="text-gray-400 dark:text-gray-500 text-base font-normal">{{ emptyMessage() }}</p>
+  </div>
 </section>
