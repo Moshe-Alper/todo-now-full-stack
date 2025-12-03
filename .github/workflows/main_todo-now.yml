@@ -37,7 +37,12 @@ jobs:
       - name: Copy frontend to backend wwwroot
         run: |
           mkdir -p backend/src/wwwroot
-          cp -r frontend/dist/angular-17-standalone/* backend/src/wwwroot/
+          # Angular 17+ outputs to browser subfolder, check and copy accordingly
+          if [ -d "frontend/dist/angular-17-standalone/browser" ]; then
+            cp -r frontend/dist/angular-17-standalone/browser/* backend/src/wwwroot/
+          else
+            cp -r frontend/dist/angular-17-standalone/* backend/src/wwwroot/
+          fi
 
       - name: Build with dotnet
         run: dotnet build backend/src/TodoApi.csproj --configuration Release
