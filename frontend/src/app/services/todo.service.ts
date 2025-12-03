@@ -124,4 +124,32 @@ export class TodoService {
     this._filterBy$.next({ ...filterBy })
   }
 
+  clearCompleted(): void {
+    const currentTodos = this.todosSubject.value
+    const completedTodos = currentTodos.filter(todo => todo.isCompleted)
+    const activeTodos = currentTodos.filter(todo => !todo.isCompleted)
+    
+    // Optimistically update UI
+    this.todosSubject.next(activeTodos)
+    
+    // Delete all completed todos from backend
+    completedTodos.forEach(todo => {
+      this.http.delete(`${this.apiUrl}/${todo.id}`, this.httpOptions).subscribe({
+        error: (error) => {
+          console.error('Error deleting completed todo:', error)
+          // Reload todos on error to sync with backend
+          this.loadTodos()
+        }
+      })
+    })
+  }
+
+  getActiveCount(): number {
+    return this.todosSubject.value.filter(todo => !todo.isCompleted).length
+  }
+
+  getCompletedCount(): number {
+    return this.todosSubject.value.filter(todo => todo.isCompleted).length
+  }
+
 }

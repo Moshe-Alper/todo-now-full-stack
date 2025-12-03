@@ -1,1 +1,40 @@
-<p>app-footer works!</p>
+<footer class="todo-footer">
+  <div class="footer-content">
+    <!-- Left: Items count -->
+    <div class="items-count">
+      <span class="count-number">{{ activeCount() }}</span>
+      <span class="count-text">{{ activeCount() === 1 ? 'item' : 'items' }} left</span>
+    </div>
+
+    <!-- Center: Filter buttons -->
+    <div class="filter-buttons">
+      <button 
+        class="filter-btn" 
+        [class.active]="isActive('all')"
+        (click)="setFilter('all')">
+        All
+      </button>
+      <button 
+        class="filter-btn" 
+        [class.active]="isActive('active')"
+        (click)="setFilter('active')">
+        Active
+      </button>
+      <button 
+        class="filter-btn" 
+        [class.active]="isActive('completed')"
+        (click)="setFilter('completed')">
+        Completed
+      </button>
+    </div>
+
+    <!-- Right: Clear completed button -->
+    <div class="clear-completed" *ngIf="completedCount() > 0">
+      <button 
+        class="clear-btn" 
+        (click)="clearCompleted()">
+        Clear completed
+      </button>
+    </div>
+  </div>
+</footer>
