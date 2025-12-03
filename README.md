@@ -27,8 +27,8 @@ cd todo-now-fullstack
 ### 2. Backend Setup
 
 ```bash
-cd backend/src
-dotnet restore
+cd backend
+dotnet restore src/TodoApi.csproj
 ```
 
 ### 3. Frontend Setup
@@ -44,15 +44,15 @@ npm install
 
 1. Navigate to the backend directory:
    ```bash
-   cd backend/src
+   cd backend
    ```
 
 2. Configure Cosmos DB connection string using user secrets:
    ```bash
-   dotnet user-secrets set "CosmosDb:ConnectionString" "AccountEndpoint=https://your-account.documents.azure.com:443/;AccountKey=your-key-here;"
+   dotnet user-secrets set "CosmosDb:ConnectionString" "AccountEndpoint=https://your-account.documents.azure.com:443/;AccountKey=your-key-here;" --project src/TodoApi.csproj
    ```
    
-   Or set it in `appsettings.json`:
+   Or set it in `appsettings.json` (located at `backend/appsettings.json`):
    ```json
    {
      "CosmosDb": {
@@ -63,7 +63,7 @@ npm install
 
 3. Run the backend:
    ```bash
-   dotnet run
+   dotnet run --project src/TodoApi.csproj
    ```
 
    The API will be available at: `http://localhost:5000`
