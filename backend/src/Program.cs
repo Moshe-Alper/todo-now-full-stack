@@ -93,7 +93,16 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowAngularDev");
 
 app.UseRouting();
+
+// Serve static files from wwwroot (Angular app)
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
+// API routes
 app.MapControllers();
+
+// Fallback to index.html for Angular routing (must be after MapControllers)
+app.MapFallbackToFile("index.html");
 
 // Initialize Cosmos DB database and container on startup
 await InitializeCosmosDbAsync(app.Services);

@@ -23,6 +23,22 @@ jobs:
         with:
           dotnet-version: '8.x'
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+
+      - name: Build Angular frontend
+        run: |
+          cd frontend
+          npm ci
+          npm run build -- --configuration production
+
+      - name: Copy frontend to backend wwwroot
+        run: |
+          mkdir -p backend/src/wwwroot
+          cp -r frontend/dist/angular-17-standalone/* backend/src/wwwroot/
+
       - name: Build with dotnet
         run: dotnet build backend/src/TodoApi.csproj --configuration Release
 
