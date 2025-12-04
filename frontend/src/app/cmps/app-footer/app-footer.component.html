@@ -8,32 +8,7 @@
       </div>
 
       <!-- Center: Filter buttons (pill style) -->
-      <div class="flex items-center gap-1 bg-gray-100 dark:bg-gray-700 p-1 rounded-lg justify-center">
-        <button 
-          class="px-4 py-1.5 text-sm font-medium rounded-md transition-all duration-200
-                 [&.active]:bg-white [&.active]:dark:bg-gray-600 [&.active]:text-primary [&.active]:shadow-sm
-                 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100" 
-          [class.active]="isActive('all')"
-          (click)="setFilter('all')">
-          All
-        </button>
-        <button 
-          class="px-4 py-1.5 text-sm font-medium rounded-md transition-all duration-200
-                 [&.active]:bg-white [&.active]:dark:bg-gray-600 [&.active]:text-primary [&.active]:shadow-sm
-                 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100" 
-          [class.active]="isActive('active')"
-          (click)="setFilter('active')">
-          Active
-        </button>
-        <button 
-          class="px-4 py-1.5 text-sm font-medium rounded-md transition-all duration-200
-                 [&.active]:bg-white [&.active]:dark:bg-gray-600 [&.active]:text-primary [&.active]:shadow-sm
-                 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100" 
-          [class.active]="isActive('completed')"
-          (click)="setFilter('completed')">
-          Completed
-        </button>
-      </div>
+      <todo-filter></todo-filter>
 
       <!-- Right: Clear completed button -->
       <div class="flex justify-center md:justify-end" *ngIf="completedCount() > 0">
