@@ -15,6 +15,61 @@ Before you begin, ensure you have the following installed:
 - **npm** (comes with Node.js)
 - **Azure Cosmos DB account** (for database)
 
+## 🔒 Security Note: Why No Connection String in Repository
+
+**Important:** The Cosmos DB connection string is intentionally **not included** in this repository for security reasons:
+
+- Connection strings contain sensitive credentials (AccountKey) that provide full access to your Cosmos DB account
+- Following the assignment requirement: **"no secrets in Git"**
+- Security best practice: Never commit secrets, API keys, or credentials to version control
+- Each developer must configure their own connection string using user secrets or environment variables
+
+The `appsettings.json` file contains an empty connection string placeholder - you must configure it locally.
+
+## 🎯 First Run Flow
+
+Follow these steps to get the application running on a fresh machine:
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd todo-now-fullstack
+   ```
+
+2. **Install dependencies**
+   ```bash
+   # Backend
+   cd backend
+   dotnet restore src/TodoApi.csproj
+   
+   # Frontend
+   cd ../frontend
+   npm install
+   ```
+
+3. **Configure environment variables / secrets**
+   ```bash
+   cd ../backend
+   # Initialize user secrets (first time only)
+   dotnet user-secrets init --project src/TodoApi.csproj
+   
+   # Set your Cosmos DB connection string
+   dotnet user-secrets set "CosmosDb:ConnectionString" "AccountEndpoint=...;AccountKey=...;" --project src/TodoApi.csproj
+   ```
+
+4. **Run the backend**
+   ```bash
+   dotnet run --project src/TodoApi.csproj
+   # Backend will be available at http://localhost:5000
+   ```
+
+5. **Run the frontend** (in a new terminal)
+   ```bash
+   cd frontend
+   npm start
+   # Frontend will be available at http://localhost:4200
+   ```
+
 ## 🚀 Setup Instructions
 
 ### 1. Clone the Repository
@@ -49,14 +104,20 @@ npm install
 
 2. Configure Cosmos DB connection string using user secrets:
    ```bash
+   # Initialize user secrets (first time only)
+   dotnet user-secrets init --project src/TodoApi.csproj
+   
+   # Set your connection string
    dotnet user-secrets set "CosmosDb:ConnectionString" "AccountEndpoint=https://your-account.documents.azure.com:443/;AccountKey=your-key-here;" --project src/TodoApi.csproj
    ```
    
-   Or set it in `appsettings.json` (located at `backend/appsettings.json`):
+   **Note:** User secrets are stored outside the project directory and never committed to Git, ensuring your credentials remain secure.
+   
+   **Alternative (Development Only):** You can also set it in `appsettings.json` (located at `backend/appsettings.json`), but **do not commit** the actual connection string:
    ```json
    {
      "CosmosDb": {
-       "ConnectionString": "AccountEndpoint=https://your-account.documents.azure.com:443/;AccountKey=your-key-here;"
+       "ConnectionString": ""  // Leave empty, use user secrets instead
      }
    }
    ```
@@ -89,6 +150,46 @@ npm install
 
    The frontend will automatically connect to the backend API at `http://localhost:5000`
 
+## 🔌 Frontend-Backend Connection
+
+### How It Works
+
+The frontend connects to the backend using environment-specific configuration:
+
+- **Development** (`environment.ts`): Points to `http://localhost:5000`
+- **Production** (`environment.prod.ts`): Points to the deployed Azure App Service URL
+
+### Customizing the API URL
+
+To connect to a different backend, edit the appropriate environment file:
+
+**Development:**
+```typescript
+// frontend/src/environments/environment.ts
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:5000'  // Change this to your backend URL
+}
+```
+
+**Production:**
+```typescript
+// frontend/src/environments/environment.prod.ts
+export const environment = {
+  production: true,
+  apiUrl: 'https://your-backend-url.azurewebsites.net'
+}
+```
+
+### Port Configuration
+
+- **Frontend:** Runs on `http://localhost:4200` (Angular default)
+- **Backend:** Runs on `http://localhost:5000` (configured in `launchSettings.json`)
+
+### CORS Configuration
+
+In development, CORS is configured to allow `http://localhost:4200` to call the backend API. In production, both frontend and backend are served from the same domain, so CORS is not required.
+
 ## ⚙️ Environment Variables Configuration
 
 ### Backend Environment Variables
@@ -96,13 +197,35 @@ npm install
 The backend uses the following configuration:
 
 #### Development (User Secrets)
+
+**First-time setup:**
+```bash
+cd backend
+dotnet user-secrets init --project src/TodoApi.csproj
+```
+
+**Set connection string:**
 ```bash
 dotnet user-secrets set "CosmosDb:ConnectionString" "AccountEndpoint=...;AccountKey=...;"
 ```
 
+**Why user secrets?** User secrets are stored outside the project directory and never committed to Git, ensuring your credentials remain secure.
+
+#### Alternative: appsettings.json (Development Only)
+
+You can also set it in `appsettings.json` (located at `backend/appsettings.json`), but **do not commit** the actual connection string:
+```json
+{
+  "CosmosDb": {
+    "ConnectionString": ""  // Leave empty, use user secrets instead
+  }
+}
+```
+
 #### Production (Azure App Settings)
+
 In Azure Portal → App Service → Environment variables → App settings → Add:
-- **Name:** `CosmosDb__ConnectionString` (use double underscore `__`)
+- **Name:** `CosmosDb__ConnectionString` (use double underscore `__`, which .NET converts to `:`)
 - **Value:** Your Cosmos DB connection string
 
 ### Frontend Environment Variables
@@ -124,6 +247,8 @@ export const environment = {
   apiUrl: 'https://todo-now-gveva8cbaqffe9gr.canadacentral-01.azurewebsites.net'
 }
 ```
+
+**Note:** In production, the frontend is served from the same Azure App Service as the backend (via `wwwroot`), so both frontend and API share the same domain. This eliminates CORS issues and simplifies deployment.
 
 The production build automatically uses `environment.prod.ts` when building with:
 ```bash
@@ -167,11 +292,31 @@ todo-now-fullstack/
 - `PUT /todos/{id}` - Update a todo
 - `DELETE /todos/{id}` - Delete a todo
 
-All endpoints require the `X-User-Id` header (defaults to "demo" if not provided).
+### X-User-Id Header
+
+All endpoints support multi-user isolation using the `X-User-Id` header:
+
+- **Purpose:** Enables multi-user support by using `userId` as the Cosmos DB partition key
+- **Usage:** 
+  - Send as HTTP header: `X-User-Id: your-user-id`
+  - Or as query parameter: `?userId=your-user-id`
+  - If neither is provided, defaults to `"demo"` for development/testing
+- **Production:** In a real application, this should be set based on authenticated user session
+- **Default behavior:** When the header is missing, the API automatically uses `"demo"` as the userId
+
+Example request:
+```bash
+curl -H "X-User-Id: alice" http://localhost:5000/todos
+```
 
 ## 🚀 Deployment
 
 The application is automatically deployed to Azure via GitHub Actions when changes are pushed to the `main` branch.
+
+**Architecture:** The frontend is built and copied to the backend's `wwwroot` directory, so both are served from the same Azure App Service instance. This means:
+- Single deployment endpoint
+- No CORS configuration needed in production
+- Simplified infrastructure
 
 The deployment process:
 1. Builds the Angular frontend
